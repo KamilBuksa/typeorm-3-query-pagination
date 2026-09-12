@@ -120,8 +120,9 @@ npm run db:up      # MariaDB on port 3308
 npm run schema
 npm run seed       # 50k products + ~750k child rows, deterministic (faker seed 42)
 
-npm run verify     # 30 assertions about the setup - run this first
+npm run verify     # 36 assertions about the setup - run this first
 npm run demo       # all four variants, three filter shapes, ~40 s
+npm run tx-check   # does relationLoadStrategy 'query' see your open transaction?
 ```
 
 Then, for the numbers behind the tables:
@@ -146,6 +147,17 @@ four variants across three filter shapes and three page depths and asserts they 
 identical ids and totals — and identical child collections too, except where variant A is
 expected to truncate them, which is asserted as well. 36 checks, `results/verify.json`,
 non-zero exit if any of them fails.
+
+## `relationLoadStrategy: 'query'` reads outside your transaction
+
+Worth knowing before you reach for variant C. The relation queries do not run on the
+transaction's query runner, so they cannot see rows the same transaction has written but
+not committed. `npm run tx-check` inserts a review inside a transaction and asks both
+strategies about it — on TypeORM 0.3.11 the `join` strategy sees 7 reviews, the `query`
+strategy sees 6. The probe rolls the transaction back, so the dataset stays intact.
+
+If your list endpoint runs inside a transaction that also writes, that is a correctness
+issue, not a preference.
 
 ## Two gotchas worth knowing
 

@@ -11,6 +11,7 @@
     "seed": "ts-node src/seed.ts",
     "indexes": "ts-node src/indexes.ts",
     "verify": "ts-node src/verify.ts",
+    "tx-check": "ts-node src/probe-transaction.ts",
     "demo": "ts-node src/demo.ts",
     "bench": "ts-node src/bench.ts",
     "bench:indexes": "ts-node src/bench-indexes.ts",
