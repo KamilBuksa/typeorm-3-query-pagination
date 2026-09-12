@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-12T13:16:23.096Z",
+  "generatedAt": "2026-09-12T17:00:50.576Z",
   "checks": [
     {
       "name": "database version",
@@ -122,6 +122,18 @@
       "pass": true
     },
     {
+      "name": "collections selective (A2/B/C identical)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "collections selective (A truncates, known bug)",
+      "expected": "A < A2",
+      "actual": "A {\"reviews\":57,\"images\":67,\"variants\":79,\"categories\":20}",
+      "pass": true
+    },
+    {
       "name": "parity selective page 7 (A/A2/B/C)",
       "expected": "identical",
       "actual": "identical",
@@ -146,6 +158,18 @@
       "pass": true
     },
     {
+      "name": "collections broad (A2/B/C identical)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "collections broad (A matches too)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
       "name": "parity broad page 7 (A/A2/B/C)",
       "expected": "identical",
       "actual": "identical",
@@ -167,6 +191,18 @@
       "name": "total relation-filter",
       "expected": "22478",
       "actual": "22478",
+      "pass": true
+    },
+    {
+      "name": "collections relation-filter (A2/B/C identical)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "collections relation-filter (A matches too)",
+      "expected": "identical",
+      "actual": "identical",
       "pass": true
     },
     {

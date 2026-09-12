@@ -113,17 +113,31 @@ void withDataSource(async (ds) => {
     ['C', findOptionsQuery],
   ];
 
-  const SCENARIOS: Array<[string, ProductFilter, number]> = [
-    ['selective', { ...DEFAULT_FILTER, page: 1 }, EXPECTED.totals.selective],
-    ['broad', BROAD, EXPECTED.totals.broad],
-    [
-      'relation-filter',
-      { ...DEFAULT_FILTER, categoryId: undefined, minRating: 1, page: 1 },
-      EXPECTED.totals.relationFilter,
-    ],
+  // `truncates` says whether variant A is expected to return incomplete child
+  // collections. It happens only where a filter on a joined collection actually
+  // excludes rows of it: rating >= 4 does, rating >= 1 excludes nothing.
+  const SCENARIOS: Array<{
+    name: string;
+    filter: ProductFilter;
+    total: number;
+    truncates: boolean;
+  }> = [
+    {
+      name: 'selective',
+      filter: { ...DEFAULT_FILTER, page: 1 },
+      total: EXPECTED.totals.selective,
+      truncates: true,
+    },
+    { name: 'broad', filter: BROAD, total: EXPECTED.totals.broad, truncates: false },
+    {
+      name: 'relation-filter',
+      filter: { ...DEFAULT_FILTER, categoryId: undefined, minRating: 1, page: 1 },
+      total: EXPECTED.totals.relationFilter,
+      truncates: false,
+    },
   ];
 
-  for (const [scenarioName, filter, expectedTotal] of SCENARIOS) {
+  for (const { name: scenarioName, filter, total: expectedTotal, truncates } of SCENARIOS) {
     for (const page of [1, 7, 50]) {
       const results: ListResult[] = [];
       for (const [, run] of VARIANTS) {
@@ -145,6 +159,37 @@ void withDataSource(async (ds) => {
 
       if (page === 1) {
         check(`total ${scenarioName}`, expectedTotal, reference.total);
+
+        // Same ids is not the same answer: the payload has to match too.
+        // A2, B and C must return complete child collections. Variant A filters
+        // on LEFT JOINs that also feed the entities, so wherever a filter sits on
+        // a relation it returns truncated collections - asserted, not glossed over.
+        const [a, a2, b, c] = results.map((result) =>
+          JSON.stringify(result.collections),
+        );
+        const completeAgree = a2 === b && b === c;
+        check(
+          `collections ${scenarioName} (A2/B/C identical)`,
+          'identical',
+          completeAgree ? 'identical' : `A2 ${a2} B ${b} C ${c}`,
+          completeAgree,
+        );
+
+        if (truncates) {
+          check(
+            `collections ${scenarioName} (A truncates, known bug)`,
+            'A < A2',
+            a === a2 ? `A ${a} == A2` : `A ${a}`,
+            a !== a2,
+          );
+        } else {
+          check(
+            `collections ${scenarioName} (A matches too)`,
+            'identical',
+            a === a2 ? 'identical' : `A ${a} vs A2 ${a2}`,
+            a === a2,
+          );
+        }
       }
     }
   }

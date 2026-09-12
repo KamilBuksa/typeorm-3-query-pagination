@@ -44,8 +44,9 @@ Read it top to bottom and the story is:
 **The `COUNT` is the cliff, not the pagination.** `ANALYZE FORMAT=JSON` on variant A,
 broad filters (`results/explain-broad-page-1.json`): `COUNT(DISTINCT product.id)` over the
 joined set takes 4,803 ms, picking the page of ids takes 401 ms, fetching the 20 entities
-takes 6 ms. The count is 92% of the request. Fixing only that — variant A2 — takes 5,708 ms
-down to 501 ms without touching how the data is fetched.
+takes 6 ms. Those three statements add up to ~5.2 s of the 5,708 ms the application
+measures; the rest is ORM hydration and driver overhead. Fixing only the count — variant
+A2 — takes 5,708 ms down to 501 ms without touching how the data is fetched.
 
 **Then the fetch-side JOINs are what is left.** Removing them gets you to 72–115 ms.
 `relationLoadStrategy: 'query'` does it in one line and wins wherever it applies.
@@ -59,7 +60,7 @@ row is the entire justification for writing the pattern yourself.
 bug. Variant A filters on the same `LEFT JOIN`s it selects, so MariaDB prunes the join
 early *and* returns truncated collections. A2 pays for being correct. See below.
 
-### Indexes do not fix this
+### Indexes are not the missing piece
 
 Every filter has a dedicated index: `products (is_active, price)`, `products (created_at)`,
 `reviews (product_id, rating)`, plus the `product_categories` primary key. All numbers
@@ -75,9 +76,11 @@ above are measured with them.
 | broad | B | 114 ms | 185 ms |
 | broad | C | 68 ms | 42 ms |
 
-Dropping the indexes does not move variant A at all. No index removes rows a `LEFT JOIN`
-invents — an index makes *finding* rows cheaper, and the problem here is how many rows
-exist after they are found.
+Dropping the indexes does not move variant A at all. Variant B, on the other hand, loses
+38% — its `EXISTS` subqueries need an index on the joining column, and without one you
+trade one problem for another. So indexes matter; they are just not what is wrong here.
+No index removes rows a `LEFT JOIN` invents: an index makes *finding* rows cheaper, and
+the problem is how many rows exist after they are found.
 
 Switching configurations needs no second database: creating these indexes on 50k products
 takes 64–644 ms and `bench:indexes` restores the full set when it finishes.
@@ -96,7 +99,12 @@ also feed the returned entities. Same 20 products, `npm run demo`:
 
 A product reaches the list because it has one review rated 4+, and then comes back carrying
 only that review. The list looks right, the total is right, and the payload is wrong.
-Splitting filtering from fetching fixes a correctness bug, not only a performance one.
+
+The condition is precise: it happens only where the filter actually excludes rows of the
+collection. With `rating >= 1`, which excludes nobody, all four variants return the same
+payload — `npm run verify` asserts both cases. The rule, independent of TypeORM: do not use
+one join to filter the parent and hydrate the child collection at the same time if you
+expect the collection to be complete.
 
 ## Run it
 
@@ -128,9 +136,11 @@ counts as mismatches — update `src/expected.ts` if you want it to pass).
 
 `npm run verify` refuses to let a number outlive its setup. It asserts the MariaDB version,
 buffer pool size, that the query cache is off, that the server is idle, every table's row
-count, the size of the multiplied join, the presence of each index, and that all four
-variants return identical ids and totals across three filter shapes and three page depths.
-30 checks, `results/verify.json`, non-zero exit on the first failure.
+count, the size of the multiplied join, and the presence of each index. Then it runs all
+four variants across three filter shapes and three page depths and asserts they return
+identical ids and totals — and identical child collections too, except where variant A is
+expected to truncate them, which is asserted as well. 36 checks, `results/verify.json`,
+non-zero exit if any of them fails.
 
 ## Two gotchas worth knowing
 
@@ -157,3 +167,7 @@ variant B checks the brand with `EXISTS` instead of joining it.
 - The `minimal` index configuration keeps the indexes foreign keys require, because a real
   schema cannot drop those either. `reviews (product_id, rating)` is swapped for
   `reviews (product_id)` rather than removed.
+- Variants B and C read through several statements, so ids, total and rows do not come from
+  one database snapshot. For a paginated list that is normally fine; if an endpoint needs
+  the total and the page to agree exactly, handle it separately. This is not unique to the
+  hand-written split — `getManyAndCount()` also runs three statements.
