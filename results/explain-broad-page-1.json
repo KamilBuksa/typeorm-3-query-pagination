@@ -1,0 +1,302 @@
+{
+  "generatedAt": "2026-09-12T13:26:22.056Z",
+  "page": 1,
+  "scenario": "broad",
+  "filter": {
+    "isActive": true,
+    "minPrice": 10,
+    "maxPrice": 500,
+    "page": 1,
+    "limit": 20
+  },
+  "single": [
+    {
+      "sql": "SELECT DISTINCT `distinctAlias`.`product_id` AS `ids_product_id`, `distinctAlias`.`product_created_at`, `distinctAlias`.`product_id` FROM (SELECT `product`.`id` AS `product_id`, `product`.`name` AS `product_name`, `product`.`price` AS `product_price`, `product`.`description` AS `product_description`, `product`.`is_active` AS `product_is_active`, `product`.`created_at` AS `product_created_at`, `product`.`brand_id` AS `product_brand_id`, `reviews`.`id` AS `reviews_id`, `reviews`.`rating` AS `reviews_rating`, `reviews`.`text` AS `reviews_text`, `reviews`.`product_id` AS `reviews_product_id`, `images`.`id` AS `images_id`, `images`.`url` AS `images_url`, `images`.`position` AS `images_position`, `images`.`product_id` AS `images_product_id`, `categories`.`id` AS `categories_id`, `categories`.`name` AS `categories_name`, `variants`.`id` AS `variants_id`, `variants`.`size` AS `variants_size`, `variants`.`color` AS `variants_color`, `variants`.`stock` AS `variants_stock`, `variants`.`product_id` AS `variants_product_id`, `brand`.`id` AS `brand_id`, `brand`.`name` AS `brand_name` FROM `products` `product` LEFT JOIN `reviews` `reviews` ON `reviews`.`product_id`=`product`.`id`  LEFT JOIN `product_images` `images` ON `images`.`product_id`=`product`.`id`  LEFT JOIN `product_categories` `product_categories` ON `product_categories`.`product_id`=`product`.`id` LEFT JOIN `categories` `categories` ON `categories`.`id`=`product_categories`.`category_id`  LEFT JOIN `variants` `variants` ON `variants`.`product_id`=`product`.`id`  INNER JOIN `brands` `brand` ON `brand`.`id`=`product`.`brand_id` WHERE `product`.`is_active` = ? AND `product`.`price` BETWEEN ? AND ?) `distinctAlias` ORDER BY `distinctAlias`.`product_created_at` DESC, `distinctAlias`.`product_id` ASC, `product_id` ASC LIMIT 20",
+      "wallClockMs": 403,
+      "plan": {
+        "query_block": {
+          "select_id": 1,
+          "r_loops": 1,
+          "r_total_time_ms": 400.8464431,
+          "filesort": {
+            "sort_key": "product.created_at desc, product.`id`",
+            "r_loops": 1,
+            "r_total_time_ms": 2.499338579,
+            "r_limit": 20,
+            "r_used_priority_queue": true,
+            "r_output_rows": 21,
+            "r_sort_mode": "sort_key,rowid",
+            "temporary_table": {
+              "table": {
+                "table_name": "variants",
+                "access_type": "ref",
+                "possible_keys": [
+                  "FK_a9625f5484e6b6941d401ec101c"
+                ],
+                "key": "FK_a9625f5484e6b6941d401ec101c",
+                "key_length": "145",
+                "used_key_parts": [
+                  "product_id"
+                ],
+                "ref": [
+                  "bench.product.id"
+                ],
+                "r_loops": 24754,
+                "rows": 2,
+                "r_rows": 1,
+                "r_table_time_ms": 79.70757031,
+                "r_other_time_ms": 31.38261637,
+                "filtered": 100,
+                "r_filtered": 100,
+                "using_index": true,
+                "distinct": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "sql": "SELECT `product`.`id` AS `product_id`, `product`.`name` AS `product_name`, `product`.`price` AS `product_price`, `product`.`description` AS `product_description`, `product`.`is_active` AS `product_is_active`, `product`.`created_at` AS `product_created_at`, `product`.`brand_id` AS `product_brand_id`, `reviews`.`id` AS `reviews_id`, `reviews`.`rating` AS `reviews_rating`, `reviews`.`text` AS `reviews_text`, `reviews`.`product_id` AS `reviews_product_id`, `images`.`id` AS `images_id`, `images`.`url` AS `images_url`, `images`.`position` AS `images_position`, `images`.`product_id` AS `images_product_id`, `categories`.`id` AS `categories_id`, `categories`.`name` AS `categories_name`, `variants`.`id` AS `variants_id`, `variants`.`size` AS `variants_size`, `variants`.`color` AS `variants_color`, `variants`.`stock` AS `variants_stock`, `variants`.`product_id` AS `variants_product_id`, `brand`.`id` AS `brand_id`, `brand`.`name` AS `brand_name` FROM `products` `product` LEFT JOIN `reviews` `reviews` ON `reviews`.`product_id`=`product`.`id`  LEFT JOIN `product_images` `images` ON `images`.`product_id`=`product`.`id`  LEFT JOIN `product_categories` `product_categories` ON `product_categories`.`product_id`=`product`.`id` LEFT JOIN `categories` `categories` ON `categories`.`id`=`product_categories`.`category_id`  LEFT JOIN `variants` `variants` ON `variants`.`product_id`=`product`.`id`  INNER JOIN `brands` `brand` ON `brand`.`id`=`product`.`brand_id` WHERE ( `product`.`is_active` = ? AND `product`.`price` BETWEEN ? AND ? ) AND ( `product`.`id` IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ) ORDER BY `product`.`created_at` DESC, `product`.`id` ASC",
+      "wallClockMs": 8,
+      "plan": {
+        "query_block": {
+          "select_id": 1,
+          "r_loops": 1,
+          "r_total_time_ms": 6.341146262,
+          "read_sorted_file": {
+            "r_rows": 20,
+            "filesort": {
+              "sort_key": "product.created_at desc, product.`id`",
+              "r_loops": 1,
+              "r_total_time_ms": 0.093992506,
+              "r_used_priority_queue": false,
+              "r_output_rows": 20,
+              "r_buffer_size": "2047Kb",
+              "r_sort_mode": "packed_sort_key,rowid",
+              "table": {
+                "table_name": "product",
+                "access_type": "range",
+                "possible_keys": [
+                  "PRIMARY",
+                  "FK_1530a6f15d3c79d1b70be98f2be",
+                  "IDX_products_active_price"
+                ],
+                "key": "PRIMARY",
+                "key_length": "144",
+                "used_key_parts": [
+                  "id"
+                ],
+                "r_loops": 1,
+                "rows": 20,
+                "r_rows": 20,
+                "r_table_time_ms": 0.094703937,
+                "r_other_time_ms": 0.036994379,
+                "filtered": 100,
+                "r_filtered": 100,
+                "attached_condition": "product.is_active = 1 and product.price between 10 and 500 and product.`id` in ('518d555f-5b42-4c2e-a8be-4eafcc513c8b','1ff789b5-2615-4945-91b5-d5fff265a958','892f41aa-f70a-49d7-885b-7f37e14a7cbe','1cd61ee8-0084-4023-ba72-359bd2b347b6','2d2244a1-09ae-46b9-8af6-10030b387286','5aa0e1c4-1575-4078-be4e-5316c2dc4d34','adc9c257-7dd0-4048-817b-58b25ec4d3ec','afbb3f88-f2e8-4916-98cd-d256ffe2f931','bd9bd150-0bc8-442d-9e42-fed6ba9c0104','f93b217d-0b03-41e1-8817-e920ed488cb7','23e55073-2651-4b48-9bb8-3f4713ce0f62','ddfff001-acfc-4c6c-bcd1-75b653f01677','3e730b8c-9866-4843-9476-06cfb231fb4f','70003934-d31b-4f00-b1dc-1772cec35d00','d7a9e69c-0018-40d4-b238-168eb439f448','d8cbcded-81da-470c-926b-8177f4c40baf','5c29b2d7-20a6-457c-822a-5f73cb55d8e8','e5556011-2170-4b32-b11c-ca82d9877ab2','67096420-1424-418a-a5a8-1ff2f08fe69e','a425cba1-54f2-4afa-ac3e-b12ae80c80b4') and product.brand_id is not null"
+              }
+            }
+          },
+          "table": {
+            "table_name": "variants",
+            "access_type": "ref",
+            "possible_keys": [
+              "FK_a9625f5484e6b6941d401ec101c"
+            ],
+            "key": "FK_a9625f5484e6b6941d401ec101c",
+            "key_length": "145",
+            "used_key_parts": [
+              "product_id"
+            ],
+            "ref": [
+              "bench.product.id"
+            ],
+            "r_loops": 867,
+            "rows": 2,
+            "r_rows": 4.423298731,
+            "r_table_time_ms": 3.921027547,
+            "r_other_time_ms": 0.239333545,
+            "filtered": 100,
+            "r_filtered": 100
+          }
+        }
+      }
+    },
+    {
+      "sql": "SELECT COUNT(DISTINCT `product`.`id`) AS `cnt` FROM `products` `product` LEFT JOIN `reviews` `reviews` ON `reviews`.`product_id`=`product`.`id`  LEFT JOIN `product_images` `images` ON `images`.`product_id`=`product`.`id`  LEFT JOIN `product_categories` `product_categories` ON `product_categories`.`product_id`=`product`.`id` LEFT JOIN `categories` `categories` ON `categories`.`id`=`product_categories`.`category_id`  LEFT JOIN `variants` `variants` ON `variants`.`product_id`=`product`.`id`  INNER JOIN `brands` `brand` ON `brand`.`id`=`product`.`brand_id` WHERE `product`.`is_active` = ? AND `product`.`price` BETWEEN ? AND ?",
+      "wallClockMs": 4784,
+      "plan": {
+        "query_block": {
+          "select_id": 1,
+          "r_loops": 1,
+          "r_total_time_ms": 4803.132738,
+          "table": {
+            "table_name": "variants",
+            "access_type": "ref",
+            "possible_keys": [
+              "FK_a9625f5484e6b6941d401ec101c"
+            ],
+            "key": "FK_a9625f5484e6b6941d401ec101c",
+            "key_length": "145",
+            "used_key_parts": [
+              "product_id"
+            ],
+            "ref": [
+              "bench.product.id"
+            ],
+            "r_loops": 955167,
+            "rows": 2,
+            "r_rows": 4.480493987,
+            "r_table_time_ms": 2182.204599,
+            "r_other_time_ms": 1392.421685,
+            "filtered": 100,
+            "r_filtered": 100,
+            "using_index": true
+          }
+        }
+      }
+    }
+  ],
+  "three": [
+    {
+      "sql": "SELECT `product`.`id` AS `id` FROM `products` `product` WHERE EXISTS (SELECT 1 FROM brands b WHERE b.id = `product`.`brand_id`) AND `product`.`is_active` = ? AND `product`.`price` BETWEEN ? AND ? ORDER BY `product`.`created_at` DESC, `product`.`id` ASC LIMIT 20",
+      "wallClockMs": 62,
+      "plan": {
+        "query_block": {
+          "select_id": 1,
+          "r_loops": 1,
+          "r_total_time_ms": 60.47141385,
+          "read_sorted_file": {
+            "r_rows": 20,
+            "filesort": {
+              "sort_key": "product.created_at desc, product.`id`",
+              "r_loops": 1,
+              "r_total_time_ms": 60.25882172,
+              "r_used_priority_queue": false,
+              "r_output_rows": 24754,
+              "r_sort_passes": 1,
+              "r_buffer_size": "2047Kb",
+              "r_sort_mode": "packed_sort_key,packed_addon_fields",
+              "table": {
+                "table_name": "product",
+                "access_type": "ref",
+                "possible_keys": [
+                  "FK_1530a6f15d3c79d1b70be98f2be",
+                  "IDX_products_active_price"
+                ],
+                "key": "IDX_products_active_price",
+                "key_length": "1",
+                "used_key_parts": [
+                  "is_active"
+                ],
+                "ref": [
+                  "const"
+                ],
+                "r_loops": 1,
+                "rows": 26151,
+                "r_rows": 24754,
+                "r_table_time_ms": 42.62007752,
+                "r_other_time_ms": 17.63162989,
+                "filtered": 49.99904251,
+                "r_filtered": 100,
+                "index_condition": "product.price between 10 and 500",
+                "attached_condition": "product.is_active <=> 1 and product.brand_id is not null"
+              }
+            }
+          },
+          "table": {
+            "table_name": "b",
+            "access_type": "eq_ref",
+            "possible_keys": [
+              "PRIMARY"
+            ],
+            "key": "PRIMARY",
+            "key_length": "4",
+            "used_key_parts": [
+              "id"
+            ],
+            "ref": [
+              "bench.product.brand_id"
+            ],
+            "r_loops": 20,
+            "rows": 1,
+            "r_rows": 1,
+            "r_table_time_ms": 0.032307308,
+            "r_other_time_ms": 0.141909434,
+            "filtered": 100,
+            "r_filtered": 100,
+            "using_index": true
+          }
+        }
+      }
+    },
+    {
+      "sql": "SELECT COUNT(1) AS `cnt` FROM `products` `product` WHERE EXISTS (SELECT 1 FROM brands b WHERE b.id = `product`.`brand_id`) AND `product`.`is_active` = ? AND `product`.`price` BETWEEN ? AND ?",
+      "wallClockMs": 52,
+      "plan": {
+        "query_block": {
+          "select_id": 1,
+          "r_loops": 1,
+          "r_total_time_ms": 50.49326815,
+          "table": {
+            "table_name": "b",
+            "access_type": "eq_ref",
+            "possible_keys": [
+              "PRIMARY"
+            ],
+            "key": "PRIMARY",
+            "key_length": "4",
+            "used_key_parts": [
+              "id"
+            ],
+            "ref": [
+              "bench.product.brand_id"
+            ],
+            "r_loops": 24754,
+            "rows": 1,
+            "r_rows": 1,
+            "r_table_time_ms": 8.562650358,
+            "r_other_time_ms": 1.09112494,
+            "filtered": 100,
+            "r_filtered": 100,
+            "using_index": true
+          }
+        }
+      }
+    },
+    {
+      "sql": "SELECT `product`.`id` AS `product_id`, `product`.`name` AS `product_name`, `product`.`price` AS `product_price`, `product`.`description` AS `product_description`, `product`.`is_active` AS `product_is_active`, `product`.`created_at` AS `product_created_at`, `product`.`brand_id` AS `product_brand_id`, `reviews`.`id` AS `reviews_id`, `reviews`.`rating` AS `reviews_rating`, `reviews`.`text` AS `reviews_text`, `reviews`.`product_id` AS `reviews_product_id`, `images`.`id` AS `images_id`, `images`.`url` AS `images_url`, `images`.`position` AS `images_position`, `images`.`product_id` AS `images_product_id`, `categories`.`id` AS `categories_id`, `categories`.`name` AS `categories_name`, `variants`.`id` AS `variants_id`, `variants`.`size` AS `variants_size`, `variants`.`color` AS `variants_color`, `variants`.`stock` AS `variants_stock`, `variants`.`product_id` AS `variants_product_id`, `brand`.`id` AS `brand_id`, `brand`.`name` AS `brand_name` FROM `products` `product` LEFT JOIN `reviews` `reviews` ON `reviews`.`product_id`=`product`.`id`  LEFT JOIN `product_images` `images` ON `images`.`product_id`=`product`.`id`  LEFT JOIN `product_categories` `product_categories` ON `product_categories`.`product_id`=`product`.`id` LEFT JOIN `categories` `categories` ON `categories`.`id`=`product_categories`.`category_id`  LEFT JOIN `variants` `variants` ON `variants`.`product_id`=`product`.`id`  INNER JOIN `brands` `brand` ON `brand`.`id`=`product`.`brand_id` WHERE `product`.`id` IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "wallClockMs": 7,
+      "plan": {
+        "query_block": {
+          "select_id": 1,
+          "r_loops": 1,
+          "r_total_time_ms": 5.85381646,
+          "table": {
+            "table_name": "variants",
+            "access_type": "ref",
+            "possible_keys": [
+              "FK_a9625f5484e6b6941d401ec101c"
+            ],
+            "key": "FK_a9625f5484e6b6941d401ec101c",
+            "key_length": "145",
+            "used_key_parts": [
+              "product_id"
+            ],
+            "ref": [
+              "bench.product.id"
+            ],
+            "r_loops": 867,
+            "rows": 2,
+            "r_rows": 4.423298731,
+            "r_table_time_ms": 3.860179326,
+            "r_other_time_ms": 0.241886325,
+            "filtered": 100,
+            "r_filtered": 100
+          }
+        }
+      }
+    }
+  ]
+}

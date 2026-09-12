@@ -1,0 +1,32 @@
+{
+  "name": "typeorm-3-query-pagination",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Benchmark: one heavy JOIN query vs. three lightweight queries for paginated lists with 1:N relations (TypeORM + MariaDB)",
+  "scripts": {
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d --wait",
+    "schema": "ts-node src/schema.ts",
+    "seed": "ts-node src/seed.ts",
+    "indexes": "ts-node src/indexes.ts",
+    "verify": "ts-node src/verify.ts",
+    "demo": "ts-node src/demo.ts",
+    "bench": "ts-node src/bench.ts",
+    "bench:indexes": "ts-node src/bench-indexes.ts",
+    "sql-proof": "ts-node src/sql-proof.ts",
+    "explain": "ts-node src/explain.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "8.4.1",
+    "dotenv": "16.4.5",
+    "mysql2": "2.3.3",
+    "reflect-metadata": "0.1.13",
+    "typeorm": "0.3.11"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.30",
+    "ts-node": "10.9.2",
+    "typescript": "5.1.6"
+  }
+}

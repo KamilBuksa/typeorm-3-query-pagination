@@ -1,0 +1,34 @@
+services:
+  mariadb:
+    # Same version as the production system the article's problem comes from.
+    image: mariadb:10.5.29
+    container_name: typeorm_3query_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: bench
+      MYSQL_USER: bench_user
+      MYSQL_PASSWORD: bench_pass
+    ports:
+      # 3308 - 3306 and 3307 were already taken by other local databases
+      - "3308:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max-allowed-packet=64M
+      --sql-mode=IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+      --innodb-buffer-pool-size=1G
+      --query-cache-type=0
+      --query-cache-size=0
+      --slow-query-log=0
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  mariadb_data:
+    driver: local

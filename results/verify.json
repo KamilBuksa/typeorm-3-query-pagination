@@ -1,0 +1,186 @@
+{
+  "generatedAt": "2026-09-12T13:16:23.096Z",
+  "checks": [
+    {
+      "name": "database version",
+      "expected": "10.5.29-MariaDB",
+      "actual": "10.5.29-MariaDB-ubu2004",
+      "pass": true
+    },
+    {
+      "name": "typeorm version",
+      "expected": "0.3.11",
+      "actual": "0.3.11",
+      "pass": true
+    },
+    {
+      "name": "server innodb_buffer_pool_size",
+      "expected": "1073741824",
+      "actual": "1073741824",
+      "pass": true
+    },
+    {
+      "name": "server query_cache_size",
+      "expected": "0",
+      "actual": "0",
+      "pass": true
+    },
+    {
+      "name": "server query_cache_type",
+      "expected": "OFF",
+      "actual": "OFF",
+      "pass": true
+    },
+    {
+      "name": "server idle (threads running <= 2)",
+      "expected": "<= 2",
+      "actual": "1",
+      "pass": true
+    },
+    {
+      "name": "rows products",
+      "expected": "50000",
+      "actual": "50000",
+      "pass": true
+    },
+    {
+      "name": "rows reviews",
+      "expected": "250705",
+      "actual": "250705",
+      "pass": true
+    },
+    {
+      "name": "rows product_images",
+      "expected": "150832",
+      "actual": "150832",
+      "pass": true
+    },
+    {
+      "name": "rows variants",
+      "expected": "224970",
+      "actual": "224970",
+      "pass": true
+    },
+    {
+      "name": "rows product_categories",
+      "expected": "124897",
+      "actual": "124897",
+      "pass": true
+    },
+    {
+      "name": "rows brands",
+      "expected": "200",
+      "actual": "200",
+      "pass": true
+    },
+    {
+      "name": "rows categories",
+      "expected": "40",
+      "actual": "40",
+      "pass": true
+    },
+    {
+      "name": "rows after the five-way join",
+      "expected": "4279620",
+      "actual": "4279620",
+      "pass": true
+    },
+    {
+      "name": "index products.IDX_products_active_price(is_active,price)",
+      "expected": "present",
+      "actual": "present",
+      "pass": true
+    },
+    {
+      "name": "index products.IDX_products_created_at(created_at)",
+      "expected": "present",
+      "actual": "present",
+      "pass": true
+    },
+    {
+      "name": "index reviews.IDX_reviews_product_rating(product_id,rating)",
+      "expected": "present",
+      "actual": "present",
+      "pass": true
+    },
+    {
+      "name": "index product_categories.PRIMARY(product_id,category_id)",
+      "expected": "present",
+      "actual": "present",
+      "pass": true
+    },
+    {
+      "name": "parity selective page 1 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "total selective",
+      "expected": "1204",
+      "actual": "1204",
+      "pass": true
+    },
+    {
+      "name": "parity selective page 7 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "parity selective page 50 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "parity broad page 1 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "total broad",
+      "expected": "24754",
+      "actual": "24754",
+      "pass": true
+    },
+    {
+      "name": "parity broad page 7 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "parity broad page 50 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "parity relation-filter page 1 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "total relation-filter",
+      "expected": "22478",
+      "actual": "22478",
+      "pass": true
+    },
+    {
+      "name": "parity relation-filter page 7 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    },
+    {
+      "name": "parity relation-filter page 50 (A/A2/B/C)",
+      "expected": "identical",
+      "actual": "identical",
+      "pass": true
+    }
+  ],
+  "failed": 0
+}

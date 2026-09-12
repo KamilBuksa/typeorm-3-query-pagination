@@ -1,0 +1,281 @@
+{
+  "generatedAt": "2026-09-12T13:26:08.586Z",
+  "environment": {
+    "database": "10.5.29-MariaDB-ubu2004",
+    "node": "v20.20.2",
+    "typeorm": "0.3.11",
+    "innodbBufferPoolSize": 1073741824,
+    "queryCacheType": "OFF",
+    "queryCacheSize": 0
+  },
+  "dataset": {
+    "products": 50000,
+    "reviews": 250705,
+    "productImages": 150832,
+    "variants": 224970,
+    "productCategories": 124897,
+    "multipliedRows": 4279620,
+    "indexes": [
+      "brands.PRIMARY(id)",
+      "categories.PRIMARY(id)",
+      "products.FK_1530a6f15d3c79d1b70be98f2be(brand_id)",
+      "products.IDX_products_active_price(is_active,price)",
+      "products.IDX_products_created_at(created_at)",
+      "products.PRIMARY(id)",
+      "product_categories.IDX_8748b4a0e8de6d266f2bbc877f(product_id)",
+      "product_categories.IDX_9148da8f26fc248e77a387e311(category_id)",
+      "product_categories.PRIMARY(product_id,category_id)",
+      "product_images.FK_4f166bb8c2bfcef2498d97b4068(product_id)",
+      "product_images.PRIMARY(id)",
+      "reviews.IDX_reviews_product_rating(product_id,rating)",
+      "reviews.PRIMARY(id)",
+      "variants.FK_a9625f5484e6b6941d401ec101c(product_id)",
+      "variants.PRIMARY(id)"
+    ]
+  },
+  "page": 1,
+  "warmup": 2,
+  "runs": 10,
+  "interleaved": true,
+  "indexTimings": {
+    "full": [],
+    "minimal": [
+      {
+        "index": "reviews.IDX_reviews_product(product_id)",
+        "action": "create",
+        "ms": 336
+      },
+      {
+        "index": "reviews.IDX_reviews_product_rating(product_id, rating)",
+        "action": "drop",
+        "ms": 13
+      },
+      {
+        "index": "products.IDX_products_active_price(is_active, price)",
+        "action": "drop",
+        "ms": 4
+      },
+      {
+        "index": "products.IDX_products_created_at(created_at)",
+        "action": "drop",
+        "ms": 6
+      }
+    ],
+    "restore": [
+      {
+        "index": "reviews.IDX_reviews_product_rating(product_id, rating)",
+        "action": "create",
+        "ms": 644
+      },
+      {
+        "index": "reviews.IDX_reviews_product(product_id)",
+        "action": "drop",
+        "ms": 10
+      },
+      {
+        "index": "products.IDX_products_active_price(is_active, price)",
+        "action": "create",
+        "ms": 64
+      },
+      {
+        "index": "products.IDX_products_created_at(created_at)",
+        "action": "create",
+        "ms": 120
+      }
+    ]
+  },
+  "results": [
+    {
+      "indexes": "full",
+      "scenario": "selective",
+      "variant": "single",
+      "total": 1204,
+      "runs": 10,
+      "min": 121.6,
+      "p50": 135.5,
+      "p90": 182.6,
+      "max": 231.7,
+      "mean": 149.5
+    },
+    {
+      "indexes": "full",
+      "scenario": "selective",
+      "variant": "single-light-count",
+      "total": 1204,
+      "runs": 10,
+      "min": 261.7,
+      "p50": 270.2,
+      "p90": 331.1,
+      "max": 451,
+      "mean": 299.6
+    },
+    {
+      "indexes": "full",
+      "scenario": "selective",
+      "variant": "three",
+      "total": 1204,
+      "runs": 10,
+      "min": 48.2,
+      "p50": 53.2,
+      "p90": 155,
+      "max": 157.8,
+      "mean": 75.4
+    },
+    {
+      "indexes": "full",
+      "scenario": "selective",
+      "variant": "strategy",
+      "total": 1204,
+      "runs": 10,
+      "min": 36.9,
+      "p50": 40.3,
+      "p90": 59.5,
+      "max": 63.5,
+      "mean": 45.3
+    },
+    {
+      "indexes": "full",
+      "scenario": "broad",
+      "variant": "single",
+      "total": 24754,
+      "runs": 10,
+      "min": 5417.7,
+      "p50": 6004.8,
+      "p90": 6398.8,
+      "max": 6583.1,
+      "mean": 6020.1
+    },
+    {
+      "indexes": "full",
+      "scenario": "broad",
+      "variant": "single-light-count",
+      "total": 24754,
+      "runs": 10,
+      "min": 448.3,
+      "p50": 579,
+      "p90": 696,
+      "max": 717.8,
+      "mean": 608.7
+    },
+    {
+      "indexes": "full",
+      "scenario": "broad",
+      "variant": "three",
+      "total": 24754,
+      "runs": 10,
+      "min": 100,
+      "p50": 113.9,
+      "p90": 244.3,
+      "max": 463.9,
+      "mean": 183.5
+    },
+    {
+      "indexes": "full",
+      "scenario": "broad",
+      "variant": "strategy",
+      "total": 24754,
+      "runs": 10,
+      "min": 63.3,
+      "p50": 67.6,
+      "p90": 100.7,
+      "max": 124.5,
+      "mean": 81.3
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "selective",
+      "variant": "single",
+      "total": 1204,
+      "runs": 10,
+      "min": 142.1,
+      "p50": 154.6,
+      "p90": 223.5,
+      "max": 225.4,
+      "mean": 169.3
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "selective",
+      "variant": "single-light-count",
+      "total": 1204,
+      "runs": 10,
+      "min": 546.2,
+      "p50": 568.1,
+      "p90": 636.8,
+      "max": 684,
+      "mean": 587.6
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "selective",
+      "variant": "three",
+      "total": 1204,
+      "runs": 10,
+      "min": 57.4,
+      "p50": 62.9,
+      "p90": 93.8,
+      "max": 99.1,
+      "mean": 72.7
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "selective",
+      "variant": "strategy",
+      "total": 1204,
+      "runs": 10,
+      "min": 46.9,
+      "p50": 50.5,
+      "p90": 96.8,
+      "max": 98.5,
+      "mean": 64.1
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "broad",
+      "variant": "single",
+      "total": 24754,
+      "runs": 10,
+      "min": 5425.4,
+      "p50": 5829.6,
+      "p90": 6135.9,
+      "max": 6312.5,
+      "mean": 5857.7
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "broad",
+      "variant": "single-light-count",
+      "total": 24754,
+      "runs": 10,
+      "min": 456.5,
+      "p50": 498.2,
+      "p90": 691.5,
+      "max": 778.1,
+      "mean": 570.7
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "broad",
+      "variant": "three",
+      "total": 24754,
+      "runs": 10,
+      "min": 152.5,
+      "p50": 184.5,
+      "p90": 268.9,
+      "max": 322.8,
+      "mean": 207
+    },
+    {
+      "indexes": "minimal",
+      "scenario": "broad",
+      "variant": "strategy",
+      "total": 24754,
+      "runs": 10,
+      "min": 36.6,
+      "p50": 42.4,
+      "p90": 54.1,
+      "max": 147.7,
+      "mean": 55.3
+    }
+  ]
+}
