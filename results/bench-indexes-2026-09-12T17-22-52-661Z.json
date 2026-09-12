@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-12T13:26:08.586Z",
+  "generatedAt": "2026-09-12T17:22:52.661Z",
   "environment": {
     "database": "10.5.29-MariaDB-ubu2004",
     "node": "v20.20.2",
@@ -34,7 +34,7 @@
     ]
   },
   "page": 1,
-  "warmup": 2,
+  "warmup": 3,
   "runs": 10,
   "interleaved": true,
   "indexTimings": {
@@ -43,12 +43,12 @@
       {
         "index": "reviews.IDX_reviews_product(product_id)",
         "action": "create",
-        "ms": 336
+        "ms": 327
       },
       {
         "index": "reviews.IDX_reviews_product_rating(product_id, rating)",
         "action": "drop",
-        "ms": 13
+        "ms": 10
       },
       {
         "index": "products.IDX_products_active_price(is_active, price)",
@@ -58,29 +58,29 @@
       {
         "index": "products.IDX_products_created_at(created_at)",
         "action": "drop",
-        "ms": 6
+        "ms": 5
       }
     ],
     "restore": [
       {
         "index": "reviews.IDX_reviews_product_rating(product_id, rating)",
         "action": "create",
-        "ms": 644
+        "ms": 349
       },
       {
         "index": "reviews.IDX_reviews_product(product_id)",
         "action": "drop",
-        "ms": 10
+        "ms": 7
       },
       {
         "index": "products.IDX_products_active_price(is_active, price)",
         "action": "create",
-        "ms": 64
+        "ms": 51
       },
       {
         "index": "products.IDX_products_created_at(created_at)",
         "action": "create",
-        "ms": 120
+        "ms": 39
       }
     ]
   },
@@ -91,11 +91,11 @@
       "variant": "single",
       "total": 1204,
       "runs": 10,
-      "min": 121.6,
-      "p50": 135.5,
-      "p90": 182.6,
-      "max": 231.7,
-      "mean": 149.5
+      "min": 155.7,
+      "p50": 163,
+      "p90": 171.1,
+      "max": 174.7,
+      "mean": 164.6
     },
     {
       "indexes": "full",
@@ -103,11 +103,11 @@
       "variant": "single-light-count",
       "total": 1204,
       "runs": 10,
-      "min": 261.7,
-      "p50": 270.2,
-      "p90": 331.1,
-      "max": 451,
-      "mean": 299.6
+      "min": 477.7,
+      "p50": 499.1,
+      "p90": 563.8,
+      "max": 699.6,
+      "mean": 524.3
     },
     {
       "indexes": "full",
@@ -115,11 +115,11 @@
       "variant": "three",
       "total": 1204,
       "runs": 10,
-      "min": 48.2,
-      "p50": 53.2,
-      "p90": 155,
-      "max": 157.8,
-      "mean": 75.4
+      "min": 43.5,
+      "p50": 47,
+      "p90": 54,
+      "max": 55.1,
+      "mean": 48.3
     },
     {
       "indexes": "full",
@@ -127,11 +127,11 @@
       "variant": "strategy",
       "total": 1204,
       "runs": 10,
-      "min": 36.9,
-      "p50": 40.3,
-      "p90": 59.5,
-      "max": 63.5,
-      "mean": 45.3
+      "min": 35.3,
+      "p50": 38.2,
+      "p90": 47.6,
+      "max": 51,
+      "mean": 40.7
     },
     {
       "indexes": "full",
@@ -139,11 +139,11 @@
       "variant": "single",
       "total": 24754,
       "runs": 10,
-      "min": 5417.7,
-      "p50": 6004.8,
-      "p90": 6398.8,
-      "max": 6583.1,
-      "mean": 6020.1
+      "min": 5099.3,
+      "p50": 5686.4,
+      "p90": 6029,
+      "max": 6274.1,
+      "mean": 5712.7
     },
     {
       "indexes": "full",
@@ -151,11 +151,11 @@
       "variant": "single-light-count",
       "total": 24754,
       "runs": 10,
-      "min": 448.3,
-      "p50": 579,
-      "p90": 696,
-      "max": 717.8,
-      "mean": 608.7
+      "min": 414.5,
+      "p50": 443.4,
+      "p90": 449.4,
+      "max": 469.3,
+      "mean": 442
     },
     {
       "indexes": "full",
@@ -163,11 +163,11 @@
       "variant": "three",
       "total": 24754,
       "runs": 10,
-      "min": 100,
-      "p50": 113.9,
-      "p90": 244.3,
-      "max": 463.9,
-      "mean": 183.5
+      "min": 83,
+      "p50": 100.1,
+      "p90": 157.2,
+      "max": 352.1,
+      "mean": 129.6
     },
     {
       "indexes": "full",
@@ -175,11 +175,11 @@
       "variant": "strategy",
       "total": 24754,
       "runs": 10,
-      "min": 63.3,
-      "p50": 67.6,
-      "p90": 100.7,
-      "max": 124.5,
-      "mean": 81.3
+      "min": 61.7,
+      "p50": 63.8,
+      "p90": 70.1,
+      "max": 76.6,
+      "mean": 66.5
     },
     {
       "indexes": "minimal",
@@ -187,11 +187,11 @@
       "variant": "single",
       "total": 1204,
       "runs": 10,
-      "min": 142.1,
-      "p50": 154.6,
-      "p90": 223.5,
-      "max": 225.4,
-      "mean": 169.3
+      "min": 137.4,
+      "p50": 140,
+      "p90": 264.3,
+      "max": 316.6,
+      "mean": 192.3
     },
     {
       "indexes": "minimal",
@@ -199,11 +199,11 @@
       "variant": "single-light-count",
       "total": 1204,
       "runs": 10,
-      "min": 546.2,
-      "p50": 568.1,
-      "p90": 636.8,
-      "max": 684,
-      "mean": 587.6
+      "min": 508.8,
+      "p50": 556.3,
+      "p90": 846.8,
+      "max": 943,
+      "mean": 637
     },
     {
       "indexes": "minimal",
@@ -211,11 +211,11 @@
       "variant": "three",
       "total": 1204,
       "runs": 10,
-      "min": 57.4,
-      "p50": 62.9,
-      "p90": 93.8,
-      "max": 99.1,
-      "mean": 72.7
+      "min": 54.3,
+      "p50": 59.5,
+      "p90": 81.3,
+      "max": 86.7,
+      "mean": 64.8
     },
     {
       "indexes": "minimal",
@@ -223,11 +223,11 @@
       "variant": "strategy",
       "total": 1204,
       "runs": 10,
-      "min": 46.9,
-      "p50": 50.5,
-      "p90": 96.8,
-      "max": 98.5,
-      "mean": 64.1
+      "min": 45.9,
+      "p50": 49.7,
+      "p90": 61.7,
+      "max": 123.1,
+      "mean": 57.6
     },
     {
       "indexes": "minimal",
@@ -235,11 +235,11 @@
       "variant": "single",
       "total": 24754,
       "runs": 10,
-      "min": 5425.4,
-      "p50": 5829.6,
-      "p90": 6135.9,
-      "max": 6312.5,
-      "mean": 5857.7
+      "min": 5123.8,
+      "p50": 5457.3,
+      "p90": 5864.6,
+      "max": 6517.8,
+      "mean": 5583.3
     },
     {
       "indexes": "minimal",
@@ -247,11 +247,11 @@
       "variant": "single-light-count",
       "total": 24754,
       "runs": 10,
-      "min": 456.5,
-      "p50": 498.2,
-      "p90": 691.5,
-      "max": 778.1,
-      "mean": 570.7
+      "min": 451.3,
+      "p50": 471.5,
+      "p90": 619.6,
+      "max": 728.4,
+      "mean": 513.9
     },
     {
       "indexes": "minimal",
@@ -259,11 +259,11 @@
       "variant": "three",
       "total": 24754,
       "runs": 10,
-      "min": 152.5,
-      "p50": 184.5,
-      "p90": 268.9,
-      "max": 322.8,
-      "mean": 207
+      "min": 145.9,
+      "p50": 185,
+      "p90": 309.2,
+      "max": 421.6,
+      "mean": 219.5
     },
     {
       "indexes": "minimal",
@@ -271,11 +271,11 @@
       "variant": "strategy",
       "total": 24754,
       "runs": 10,
-      "min": 36.6,
-      "p50": 42.4,
-      "p90": 54.1,
-      "max": 147.7,
-      "mean": 55.3
+      "min": 36.4,
+      "p50": 40.1,
+      "p90": 44.6,
+      "max": 45.8,
+      "mean": 40.3
     }
   ]
 }

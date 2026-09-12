@@ -1,0 +1,799 @@
+{
+  "generatedAt": "2026-09-12T17:19:37.794Z",
+  "environment": {
+    "database": "10.5.29-MariaDB-ubu2004",
+    "node": "v20.20.2",
+    "typeorm": "0.3.11",
+    "innodbBufferPoolSize": 1073741824,
+    "queryCacheType": "OFF",
+    "queryCacheSize": 0
+  },
+  "dataset": {
+    "products": 50000,
+    "reviews": 250705,
+    "productImages": 150832,
+    "variants": 224970,
+    "productCategories": 124897,
+    "multipliedRows": 4279620,
+    "indexes": [
+      "brands.PRIMARY(id)",
+      "categories.PRIMARY(id)",
+      "products.FK_1530a6f15d3c79d1b70be98f2be(brand_id)",
+      "products.IDX_products_active_price(is_active,price)",
+      "products.IDX_products_created_at(created_at)",
+      "products.PRIMARY(id)",
+      "product_categories.IDX_8748b4a0e8de6d266f2bbc877f(product_id)",
+      "product_categories.IDX_9148da8f26fc248e77a387e311(category_id)",
+      "product_categories.PRIMARY(product_id,category_id)",
+      "product_images.FK_4f166bb8c2bfcef2498d97b4068(product_id)",
+      "product_images.PRIMARY(id)",
+      "reviews.IDX_reviews_product_rating(product_id,rating)",
+      "reviews.PRIMARY(id)",
+      "variants.FK_a9625f5484e6b6941d401ec101c(product_id)",
+      "variants.PRIMARY(id)"
+    ]
+  },
+  "warmup": 3,
+  "runs": 10,
+  "interleaved": true,
+  "scenarios": [
+    {
+      "key": "selective",
+      "label": "selective filters (category + rating)",
+      "filter": {
+        "isActive": true,
+        "minPrice": 10,
+        "maxPrice": 500,
+        "categoryId": 1,
+        "minRating": 4,
+        "page": 1,
+        "limit": 20
+      }
+    },
+    {
+      "key": "broad",
+      "label": "broad filters (is_active + price)",
+      "filter": {
+        "isActive": true,
+        "minPrice": 10,
+        "maxPrice": 500,
+        "page": 1,
+        "limit": 20
+      }
+    },
+    {
+      "key": "relation-filter",
+      "label": "broad filter on a relation (rating >= 1)",
+      "filter": {
+        "isActive": true,
+        "minPrice": 10,
+        "maxPrice": 500,
+        "minRating": 1,
+        "page": 1,
+        "limit": 20
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "selective",
+      "page": 1,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 57,
+        "images": 67,
+        "variants": 79,
+        "categories": 20
+      },
+      "runs": 10,
+      "min": 118.3,
+      "p50": 121.4,
+      "p90": 137.3,
+      "max": 138.5,
+      "mean": 126.1
+    },
+    {
+      "scenario": "selective",
+      "page": 1,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 133,
+        "images": 67,
+        "variants": 79,
+        "categories": 65
+      },
+      "runs": 10,
+      "min": 243.4,
+      "p50": 248,
+      "p90": 308.8,
+      "max": 310.4,
+      "mean": 263.8
+    },
+    {
+      "scenario": "selective",
+      "page": 1,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 133,
+        "images": 67,
+        "variants": 79,
+        "categories": 65
+      },
+      "runs": 10,
+      "min": 44.7,
+      "p50": 48.5,
+      "p90": 68.8,
+      "max": 285.2,
+      "mean": 75.4
+    },
+    {
+      "scenario": "selective",
+      "page": 1,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 133,
+        "images": 67,
+        "variants": 79,
+        "categories": 65
+      },
+      "runs": 10,
+      "min": 37.9,
+      "p50": 41.1,
+      "p90": 52.1,
+      "max": 63.6,
+      "mean": 45.9
+    },
+    {
+      "scenario": "selective",
+      "page": 10,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 53,
+        "images": 52,
+        "variants": 98,
+        "categories": 20
+      },
+      "runs": 10,
+      "min": 110.9,
+      "p50": 112.6,
+      "p90": 115.1,
+      "max": 117.6,
+      "mean": 113
+    },
+    {
+      "scenario": "selective",
+      "page": 10,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 118,
+        "images": 52,
+        "variants": 98,
+        "categories": 61
+      },
+      "runs": 10,
+      "min": 190.8,
+      "p50": 199.2,
+      "p90": 213.2,
+      "max": 219.9,
+      "mean": 201.5
+    },
+    {
+      "scenario": "selective",
+      "page": 10,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 118,
+        "images": 52,
+        "variants": 98,
+        "categories": 61
+      },
+      "runs": 10,
+      "min": 34.4,
+      "p50": 35.3,
+      "p90": 36.8,
+      "max": 36.8,
+      "mean": 35.5
+    },
+    {
+      "scenario": "selective",
+      "page": 10,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 118,
+        "images": 52,
+        "variants": 98,
+        "categories": 61
+      },
+      "runs": 10,
+      "min": 34.7,
+      "p50": 35.6,
+      "p90": 36.8,
+      "max": 37.3,
+      "mean": 35.9
+    },
+    {
+      "scenario": "selective",
+      "page": 50,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 49,
+        "images": 65,
+        "variants": 74,
+        "categories": 20
+      },
+      "runs": 10,
+      "min": 107.2,
+      "p50": 110.4,
+      "p90": 115,
+      "max": 123.2,
+      "mean": 111.5
+    },
+    {
+      "scenario": "selective",
+      "page": 50,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 131,
+        "images": 65,
+        "variants": 74,
+        "categories": 55
+      },
+      "runs": 10,
+      "min": 209.4,
+      "p50": 214.2,
+      "p90": 239.7,
+      "max": 246.5,
+      "mean": 222.7
+    },
+    {
+      "scenario": "selective",
+      "page": 50,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 131,
+        "images": 65,
+        "variants": 74,
+        "categories": 55
+      },
+      "runs": 10,
+      "min": 34,
+      "p50": 38,
+      "p90": 44.6,
+      "max": 57.8,
+      "mean": 40.9
+    },
+    {
+      "scenario": "selective",
+      "page": 50,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 1204,
+      "returned": 20,
+      "collections": {
+        "reviews": 131,
+        "images": 65,
+        "variants": 74,
+        "categories": 55
+      },
+      "runs": 10,
+      "min": 35.3,
+      "p50": 37.2,
+      "p90": 40.7,
+      "max": 51.9,
+      "mean": 39.2
+    },
+    {
+      "scenario": "broad",
+      "page": 1,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 128,
+        "images": 58,
+        "variants": 74,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 5059,
+      "p50": 5740.6,
+      "p90": 6508.6,
+      "max": 7054.7,
+      "mean": 5897
+    },
+    {
+      "scenario": "broad",
+      "page": 1,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 128,
+        "images": 58,
+        "variants": 74,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 418,
+      "p50": 529.4,
+      "p90": 620.2,
+      "max": 990.6,
+      "mean": 553.1
+    },
+    {
+      "scenario": "broad",
+      "page": 1,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 128,
+        "images": 58,
+        "variants": 74,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 88.7,
+      "p50": 105.9,
+      "p90": 137.7,
+      "max": 408.4,
+      "mean": 135.7
+    },
+    {
+      "scenario": "broad",
+      "page": 1,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 128,
+        "images": 58,
+        "variants": 74,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 61.3,
+      "p50": 68.8,
+      "p90": 77.7,
+      "max": 82.8,
+      "mean": 70.8
+    },
+    {
+      "scenario": "broad",
+      "page": 10,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 106,
+        "images": 65,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 5366.8,
+      "p50": 5924.4,
+      "p90": 6380.2,
+      "max": 6681.3,
+      "mean": 5972.9
+    },
+    {
+      "scenario": "broad",
+      "page": 10,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 106,
+        "images": 65,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 443.5,
+      "p50": 508.2,
+      "p90": 762.7,
+      "max": 772.4,
+      "mean": 574.8
+    },
+    {
+      "scenario": "broad",
+      "page": 10,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 106,
+        "images": 65,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 88.3,
+      "p50": 101.7,
+      "p90": 111.5,
+      "max": 182,
+      "mean": 110
+    },
+    {
+      "scenario": "broad",
+      "page": 10,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 106,
+        "images": 65,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 62.2,
+      "p50": 65.3,
+      "p90": 68.9,
+      "max": 69.5,
+      "mean": 65.5
+    },
+    {
+      "scenario": "broad",
+      "page": 50,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 83,
+        "images": 55,
+        "variants": 87,
+        "categories": 53
+      },
+      "runs": 10,
+      "min": 5502.6,
+      "p50": 6057.5,
+      "p90": 6330.1,
+      "max": 7895.7,
+      "mean": 6201.8
+    },
+    {
+      "scenario": "broad",
+      "page": 50,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 83,
+        "images": 55,
+        "variants": 87,
+        "categories": 53
+      },
+      "runs": 10,
+      "min": 426.9,
+      "p50": 530.8,
+      "p90": 718.7,
+      "max": 1032.4,
+      "mean": 583.2
+    },
+    {
+      "scenario": "broad",
+      "page": 50,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 83,
+        "images": 55,
+        "variants": 87,
+        "categories": 53
+      },
+      "runs": 10,
+      "min": 90,
+      "p50": 111.6,
+      "p90": 141.4,
+      "max": 602,
+      "mean": 162.4
+    },
+    {
+      "scenario": "broad",
+      "page": 50,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 24754,
+      "returned": 20,
+      "collections": {
+        "reviews": 83,
+        "images": 55,
+        "variants": 87,
+        "categories": 53
+      },
+      "runs": 10,
+      "min": 65.2,
+      "p50": 76.9,
+      "p90": 85.7,
+      "max": 138.9,
+      "mean": 81
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 1,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 137,
+        "images": 61,
+        "variants": 78,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 4929.7,
+      "p50": 5403.9,
+      "p90": 6672.1,
+      "max": 7924,
+      "mean": 5820.1
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 1,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 137,
+        "images": 61,
+        "variants": 78,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 735.6,
+      "p50": 823.7,
+      "p90": 1192.2,
+      "max": 1433.6,
+      "mean": 947
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 1,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 137,
+        "images": 61,
+        "variants": 78,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 157.5,
+      "p50": 196.7,
+      "p90": 307.3,
+      "max": 473.2,
+      "mean": 238.2
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 1,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 137,
+        "images": 61,
+        "variants": 78,
+        "categories": 51
+      },
+      "runs": 10,
+      "min": 295.1,
+      "p50": 312.9,
+      "p90": 578.5,
+      "max": 635,
+      "mean": 382.4
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 10,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 120,
+        "images": 54,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 4776.6,
+      "p50": 5333.6,
+      "p90": 5966.3,
+      "max": 6638.8,
+      "mean": 5407.3
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 10,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 120,
+        "images": 54,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 497.3,
+      "p50": 554.2,
+      "p90": 763.3,
+      "max": 926.6,
+      "mean": 633.9
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 10,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 120,
+        "images": 54,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 152.9,
+      "p50": 169.1,
+      "p90": 208.2,
+      "max": 234.9,
+      "mean": 177.3
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 10,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 120,
+        "images": 54,
+        "variants": 91,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 294.7,
+      "p50": 305.9,
+      "p90": 360.2,
+      "max": 371.1,
+      "mean": 320.8
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 50,
+      "variant": "single",
+      "label": "A - getManyAndCount()",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 111,
+        "images": 61,
+        "variants": 73,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 4813.1,
+      "p50": 5191.8,
+      "p90": 5751.8,
+      "max": 5906.5,
+      "mean": 5256.4
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 50,
+      "variant": "single-light-count",
+      "label": "A2 - joins + light COUNT",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 111,
+        "images": 61,
+        "variants": 73,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 476.4,
+      "p50": 523.1,
+      "p90": 637.3,
+      "max": 764.7,
+      "mean": 553.4
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 50,
+      "variant": "three",
+      "label": "B - split filter/fetch",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 111,
+        "images": 61,
+        "variants": 73,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 154.7,
+      "p50": 162.7,
+      "p90": 208.5,
+      "max": 209.4,
+      "mean": 172.1
+    },
+    {
+      "scenario": "relation-filter",
+      "page": 50,
+      "variant": "strategy",
+      "label": "C - relationLoadStrategy",
+      "total": 22478,
+      "returned": 20,
+      "collections": {
+        "reviews": 111,
+        "images": 61,
+        "variants": 73,
+        "categories": 45
+      },
+      "runs": 10,
+      "min": 285.5,
+      "p50": 303,
+      "p90": 368.9,
+      "max": 444.1,
+      "mean": 322.5
+    }
+  ]
+}

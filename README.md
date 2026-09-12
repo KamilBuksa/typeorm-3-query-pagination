@@ -31,32 +31,34 @@ asserts it before any measurement is trusted.
 ## Results
 
 p50 of 20 measured runs after 3 warm-ups, page 1, page size 20, variants interleaved.
-Raw numbers: `results/bench-2026-09-12T13-22-26-322Z.json`.
+Produced by a clean run: `db:reset`, `schema`, `seed`, then the benchmarks.
+Raw numbers: `results/bench-2026-09-12T17-19-37-787Z.json`.
 
 | Filters | A `getManyAndCount()` | A2 light COUNT | B split | C `relationLoadStrategy` |
 |---|---|---|---|---|
-| broad — `is_active` + price (24,754 match) | 5,708 ms | 501 ms | 115 ms | **72 ms** |
-| broad filter on a relation — `rating >= 1` (22,478 match) | 5,773 ms | 952 ms | **191 ms** | 326 ms |
-| selective — category + `rating >= 4` (1,204 match) | 127 ms | 520 ms | 51 ms | **39 ms** |
+| broad — `is_active` + price (24,754 match) | 5,741 ms | 529 ms | 106 ms | **69 ms** |
+| broad filter on a relation — `rating >= 1` (22,478 match) | 5,404 ms | 824 ms | **197 ms** | 313 ms |
+| selective — category + `rating >= 4` (1,204 match) | 121 ms | 248 ms | 49 ms | **41 ms** |
 
 Read it top to bottom and the story is:
 
 **The `COUNT` is the cliff, not the pagination.** `ANALYZE FORMAT=JSON` on variant A,
 broad filters (`results/explain-broad-page-1.json`): `COUNT(DISTINCT product.id)` over the
-joined set takes 4,803 ms, picking the page of ids takes 401 ms, fetching the 20 entities
-takes 6 ms. Those three statements add up to ~5.2 s of the 5,708 ms the application
-measures; the rest is ORM hydration and driver overhead. Fixing only the count — variant
-A2 — takes 5,708 ms down to 501 ms without touching how the data is fetched.
+joined set takes 5,470 ms, picking the page of ids takes 471 ms, fetching the 20 entities
+takes 6 ms. Do not subtract those from the 5,741 ms measured by the application — `ANALYZE`
+re-runs each statement and adds its own overhead, so they sum slightly higher. The
+proportion is unambiguous though. Fixing only the count — variant A2 — takes 5,741 ms down
+to 529 ms without touching how the data is fetched.
 
-**Then the fetch-side JOINs are what is left.** Removing them gets you to 72–115 ms.
+**Then the fetch-side JOINs are what is left.** Removing them gets you to 69–106 ms.
 `relationLoadStrategy: 'query'` does it in one line and wins wherever it applies.
 
 **Except when a filter sits on a relation.** A join used for *filtering* cannot be removed
 by a fetch-side option, and it multiplies just the same: in row two variant C falls to
-326 ms while the hand-written split, which filters with `EXISTS`, holds at 191 ms. That
+313 ms while the hand-written split, which filters with `EXISTS`, holds at 197 ms. That
 row is the entire justification for writing the pattern yourself.
 
-**Variant A2 can be slower than A** (selective row, 520 ms vs 127 ms) — and that is not a
+**Variant A2 can be slower than A** (selective row, 248 ms vs 121 ms) — and that is not a
 bug. Variant A filters on the same `LEFT JOIN`s it selects, so MariaDB prunes the join
 early *and* returns truncated collections. A2 pays for being correct. See below.
 
@@ -67,18 +69,19 @@ Every filter has a dedicated index: `products (is_active, price)`, `products (cr
 above are measured with them.
 
 `npm run bench:indexes` re-runs with only the indexes foreign keys force the engine to keep
-(p50, 10 runs, `results/bench-indexes-2026-09-12T13-26-08-580Z.json`):
+(p50, 10 runs, `results/bench-indexes-2026-09-12T17-22-52-661Z.json`):
 
 | Filters | Variant | Full indexes | Minimal indexes |
 |---|---|---|---|
-| broad | A | 6,005 ms | 5,830 ms |
-| broad | A2 | 579 ms | 498 ms |
-| broad | B | 114 ms | 185 ms |
-| broad | C | 68 ms | 42 ms |
+| broad | A | 5,686 ms | 5,457 ms |
+| broad | A2 | 443 ms | 472 ms |
+| broad | B | 100 ms | 185 ms |
+| broad | C | 64 ms | 40 ms |
 
-Dropping the indexes does not move variant A at all. Variant B, on the other hand, loses
-38% — its `EXISTS` subqueries need an index on the joining column, and without one you
-trade one problem for another. So indexes matter; they are just not what is wrong here.
+Dropping the indexes leaves variant A in the same range — the 4% difference, in favour of
+the version without them, is measurement noise. Variant B, on the other hand, goes from
+100 ms to 185 ms: its `EXISTS` subqueries need an index on the joining column, and without
+one you trade one problem for another. So indexes matter; they are just not what is wrong here.
 No index removes rows a `LEFT JOIN` invents: an index makes *finding* rows cheaper, and
 the problem is how many rows exist after they are found.
 
@@ -96,6 +99,8 @@ also feed the returned entities. Same 20 products, `npm run demo`:
 | categories | 20 | 65 | 65 | 65 |
 | images | 67 | 67 | 67 | 67 |
 | variants | 79 | 79 | 79 | 79 |
+
+(Identical across a full `db:reset` and reseed — the dataset is deterministic.)
 
 A product reaches the list because it has one review rated 4+, and then comes back carrying
 only that review. The list looks right, the total is right, and the payload is wrong.
