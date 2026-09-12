@@ -38,7 +38,8 @@ SELECT COUNT(DISTINCT `product`.`id`) AS `cnt` FROM `products` `product` LEFT JO
 Two statements, two different costs. The `FROM (...) distinctAlias` subquery picks one
 page of distinct ids out of the joined set - MariaDB optimizes it well and it is not where
 the time goes. The `COUNT(DISTINCT ...)` over the same joined set is the expensive one:
-in `results/explain-broad-page-1.json` it accounts for over 90% of the request.
+in `results/explain-broad-page-1.json` it takes 4,803 ms against 401 ms for picking the
+page of ids and 6 ms for fetching the rows.
 
 ## 4. `getCount()` — with and without a join
 
